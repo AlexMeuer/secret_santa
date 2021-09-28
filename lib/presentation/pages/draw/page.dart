@@ -28,6 +28,7 @@ class DrawPage extends HookWidget {
         title: const Text("Don't let anyone else see!"),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        tooltip: show.value ? null : "Reveal before continuing.",
         onPressed: show.value
             ? () => index + 1 >= names.length
                 ? AutoRouter.of(context).push(const EndPageRoute())
