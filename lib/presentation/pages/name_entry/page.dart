@@ -33,6 +33,11 @@ class NameEntryPage extends HookWidget {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       floatingActionButton: FloatingActionButton.extended(
+        focusNode: FocusNode(
+          skipTraversal: true,
+          canRequestFocus: false,
+          descendantsAreFocusable: false,
+        ),
         backgroundColor: canProgress ? null : Colors.grey,
         tooltip: canProgress ? null : "Enter at least 3 names.",
         onPressed: canProgress

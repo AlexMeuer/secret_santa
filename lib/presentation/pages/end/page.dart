@@ -66,9 +66,7 @@ class EndPage extends HookWidget {
                 preferences: const AnimationPreferences(
                   offset: Duration(seconds: 1),
                 ),
-                child: isSmallDevice(context)
-                    ? const BasicMadeBy()
-                    : const GlitchMadeBy(),
+                child: const GlitchMadeBy(),
               ),
             ],
           ),
@@ -76,7 +74,4 @@ class EndPage extends HookWidget {
       ),
     );
   }
-
-  static bool isSmallDevice(BuildContext context) =>
-      MediaQuery.of(context).size.shortestSide < 600;
 }
