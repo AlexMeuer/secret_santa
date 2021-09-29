@@ -1,75 +1,70 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animator/flutter_animator.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
+import 'package:secretsanta/presentation/widgets/blurred_bg.dart';
+import 'package:secretsanta/presentation/widgets/glitch.dart';
+import 'package:secretsanta/presentation/widgets/glitch_made_by.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class EndPage extends StatelessWidget {
+class EndPage extends HookWidget {
   const EndPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => Future.value(false),
-      child: Scaffold(
-        body: Stack(
+    final animateLottie =
+        useFuture(Future.delayed(const Duration(seconds: 2)).then((_) => true));
+    return Scaffold(
+      body: BlurredBackground(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            SizedBox.expand(
-              child: CachedNetworkImage(
-                imageUrl: "https://source.unsplash.com/SUTfFCAHV_A/800x1900",
-                fit: BoxFit.cover,
+            FadeInDown(
+              preferences: const AnimationPreferences(
+                offset: Duration(seconds: 3),
+              ),
+              child: AutoSizeText(
+                "That's all folks!",
+                maxLines: 1,
+                style: Theme.of(context).textTheme.headline1,
+                textAlign: TextAlign.center,
               ),
             ),
-            Center(
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                  child: Container(
-                    width: 200.0,
-                    height: 200.0,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade200.withOpacity(0.5)),
-                    child: Center(
-                      child: Text(
-                        "That's all folks!",
-                        style: Theme.of(context).textTheme.headline3,
-                      ),
-                    ),
-                  ),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 600),
+              child: Lottie.asset(
+                "assets/lottie/christmas-tree.json",
+                animate: animateLottie.data == true,
+                repeat: false,
+              ),
+            ),
+            FadeInUp(
+              preferences: const AnimationPreferences(
+                offset: Duration(seconds: 5),
+              ),
+              child: OutlinedButton.icon(
+                onPressed: AutoRouter.of(context).popUntilRoot,
+                icon: const Icon(
+                  Icons.chevron_left_rounded,
+                  color: Colors.white,
+                ),
+                label: const Text(
+                  "START AGAIN",
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: DefaultTextStyle(
-                style: GoogleFonts.majorMonoDisplay()
-                    .copyWith(fontWeight: FontWeight.bold),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        const TextSpan(text: "Made by "),
-                        TextSpan(
-                          text: "Alex Meuer",
-                          style: const TextStyle(color: Colors.lightBlue),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => launch("https://alexmeuer.com"),
-                        ),
-                        const TextSpan(text: " with "),
-                        TextSpan(
-                          text: "Flutter",
-                          style: const TextStyle(color: Colors.lightBlue),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => launch("https://flutter.dev/"),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+            SlideInUp(
+              preferences: const AnimationPreferences(
+                offset: Duration(seconds: 1),
               ),
+              child: const GlitchMadeBy(),
             ),
           ],
         ),
