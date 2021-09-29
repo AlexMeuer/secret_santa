@@ -1,15 +1,24 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class BackgroundImage extends StatelessWidget {
-  const BackgroundImage({Key? key}) : super(key: key);
+  const BackgroundImage({
+    Key? key,
+    this.child,
+  }) : super(key: key);
+
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.expand(
-      child: CachedNetworkImage(
-        imageUrl: "https://source.unsplash.com/SUTfFCAHV_A/800x1900",
-        fit: BoxFit.cover,
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/bg.jpg"),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: SizedBox.expand(
+        child: child,
       ),
     );
   }

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:built_collection/built_collection.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -64,8 +63,8 @@ class NameEntryPage extends HookWidget {
                 "Secret Santa",
                 style: GoogleFonts.mountainsOfChristmas(),
               ),
-              background: CachedNetworkImage(
-                imageUrl: "https://source.unsplash.com/SUTfFCAHV_A/800x600",
+              background: Image.asset(
+                "assets/images/bg.jpg",
                 fit: BoxFit.cover,
               ),
             ),
@@ -144,8 +143,10 @@ class NameEntryPage extends HookWidget {
             child: Align(
               alignment: Alignment.bottomLeft,
               child: DefaultTextStyle(
-                style: GoogleFonts.majorMonoDisplay()
-                    .copyWith(fontWeight: FontWeight.bold),
+                style: GoogleFonts.majorMonoDisplay().copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10,
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Text.rich(

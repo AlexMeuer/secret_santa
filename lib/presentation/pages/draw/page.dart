@@ -6,7 +6,7 @@ import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lottie/lottie.dart';
 import 'package:secretsanta/presentation/routes/auto_router.gr.dart';
-import 'package:secretsanta/presentation/widgets/blurred_bg.dart';
+import 'package:secretsanta/presentation/widgets/bg_image.dart';
 
 class DrawPage extends HookWidget {
   DrawPage({
@@ -58,17 +58,20 @@ class DrawPage extends HookWidget {
       ),
       body: Stack(
         children: [
-          BlurredBackground(
+          BackgroundImage(
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  AutoSizeText(
-                    names[index],
-                    style: theme.textTheme.headline1
-                        ?.copyWith(color: Colors.white),
-                    maxLines: 1,
-                    textAlign: TextAlign.center,
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 420),
+                    child: AutoSizeText(
+                      names[index],
+                      style: theme.textTheme.headline1
+                          ?.copyWith(color: Colors.white),
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   Tada(
                     key: revealAnimKey,
