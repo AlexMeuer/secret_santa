@@ -4,7 +4,6 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:lottie/lottie.dart';
 import 'package:secretsanta/presentation/routes/auto_router.gr.dart';
 import 'package:secretsanta/presentation/widgets/bg_image.dart';
 
@@ -56,69 +55,55 @@ class DrawPage extends HookWidget {
           backgroundColor: show.value ? null : Colors.grey,
         ),
       ),
-      body: Stack(
-        children: [
-          BackgroundImage(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 420),
+      body: BackgroundImage(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: AutoSizeText(
+                  names[index],
+                  style:
+                      theme.textTheme.headline1?.copyWith(color: Colors.white),
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Tada(
+                key: revealAnimKey,
+                preferences: const AnimationPreferences(
+                  autoPlay: AnimationPlayStates.None,
+                ),
+                child: ElevatedButton(
+                  onPressed: show.value
+                      ? null
+                      : () {
+                          show.value = true;
+                          // Loop the animation with a delay.
+                          fabAnimKey.currentState?.animator?.controller
+                              ?.addStatusListener((status) {
+                            if (status != AnimationStatus.completed) return;
+                            animateFabAfterDelay();
+                          });
+                          animateFabAfterDelay();
+                          revealAnimKey.currentState?.animator?.forward();
+                        },
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(minWidth: 200),
                     child: AutoSizeText(
-                      names[index],
-                      style: theme.textTheme.headline1
+                      show.value ? names[drawNames[index]] : "DRAW",
+                      style: theme.textTheme.headline2
                           ?.copyWith(color: Colors.white),
                       maxLines: 1,
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Tada(
-                    key: revealAnimKey,
-                    preferences: const AnimationPreferences(
-                      autoPlay: AnimationPlayStates.None,
-                    ),
-                    child: ElevatedButton(
-                      onPressed: show.value
-                          ? null
-                          : () {
-                              show.value = true;
-                              // Loop the animation with a delay.
-                              fabAnimKey.currentState?.animator?.controller
-                                  ?.addStatusListener((status) {
-                                if (status != AnimationStatus.completed) return;
-                                animateFabAfterDelay();
-                              });
-                              animateFabAfterDelay();
-                              revealAnimKey.currentState?.animator?.forward();
-                            },
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(minWidth: 200),
-                        child: AutoSizeText(
-                          show.value ? names[drawNames[index]] : "DRAW",
-                          style: theme.textTheme.headline2
-                              ?.copyWith(color: Colors.white),
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-          IgnorePointer(
-            child: Align(
-              alignment: const Alignment(0.0, 0.8),
-              child: Lottie.asset(
-                "assets/lottie/confetti.json",
-                repeat: false,
-                animate: show.value,
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

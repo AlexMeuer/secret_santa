@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lottie/lottie.dart';
+import 'package:secretsanta/presentation/widgets/basic_made_by.dart';
 import 'package:secretsanta/presentation/widgets/bg_image.dart';
 import 'package:secretsanta/presentation/widgets/glitch_made_by.dart';
 
@@ -18,56 +19,64 @@ class EndPage extends HookWidget {
         useFuture(Future.delayed(const Duration(seconds: 2)).then((_) => true));
     return Scaffold(
       body: BackgroundImage(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            FadeInDown(
-              preferences: const AnimationPreferences(
-                offset: Duration(seconds: 1),
-              ),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: AutoSizeText(
-                  "That's all folks!",
-                  maxLines: 1,
-                  style: Theme.of(context).textTheme.headline1,
-                  textAlign: TextAlign.center,
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              FadeInDown(
+                preferences: const AnimationPreferences(
+                  offset: Duration(seconds: 1),
+                ),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 420),
+                  child: AutoSizeText(
+                    "That's all folks!",
+                    maxLines: 1,
+                    style: Theme.of(context).textTheme.headline1,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-            ),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 600, maxWidth: 600),
-              child: Lottie.asset(
-                "assets/lottie/christmas-tree.json",
-                animate: animateLottie.data == true,
-                repeat: false,
-              ),
-            ),
-            FadeInUp(
-              preferences: const AnimationPreferences(
-                offset: Duration(seconds: 5),
-              ),
-              child: OutlinedButton.icon(
-                onPressed: AutoRouter.of(context).popUntilRoot,
-                icon: const Icon(
-                  Icons.chevron_left_rounded,
-                  color: Colors.white,
-                ),
-                label: const Text(
-                  "START AGAIN",
-                  style: TextStyle(color: Colors.white),
+              ConstrainedBox(
+                constraints:
+                    const BoxConstraints(maxHeight: 600, maxWidth: 600),
+                child: Lottie.asset(
+                  "assets/lottie/christmas-tree.json",
+                  animate: animateLottie.data == true,
+                  repeat: false,
                 ),
               ),
-            ),
-            SlideInUp(
-              preferences: const AnimationPreferences(
-                offset: Duration(seconds: 1),
+              FadeInUp(
+                preferences: const AnimationPreferences(
+                  offset: Duration(seconds: 5),
+                ),
+                child: OutlinedButton.icon(
+                  onPressed: AutoRouter.of(context).popUntilRoot,
+                  icon: const Icon(
+                    Icons.chevron_left_rounded,
+                    color: Colors.white,
+                  ),
+                  label: const Text(
+                    "START AGAIN",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ),
-              child: const GlitchMadeBy(),
-            ),
-          ],
+              SlideInUp(
+                preferences: const AnimationPreferences(
+                  offset: Duration(seconds: 1),
+                ),
+                child: isSmallDevice(context)
+                    ? const BasicMadeBy()
+                    : const GlitchMadeBy(),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+
+  static bool isSmallDevice(BuildContext context) =>
+      MediaQuery.of(context).size.shortestSide < 600;
 }
