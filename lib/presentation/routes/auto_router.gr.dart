@@ -8,22 +8,23 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i4;
-import 'package:built_collection/built_collection.dart' as _i6;
-import 'package:flutter/material.dart' as _i5;
+import 'package:auto_route/auto_route.dart' as _i5;
+import 'package:built_collection/built_collection.dart' as _i7;
+import 'package:flutter/material.dart' as _i6;
 import 'package:secretsanta/presentation/pages/draw/page.dart' as _i1;
 import 'package:secretsanta/presentation/pages/end/page.dart' as _i2;
 import 'package:secretsanta/presentation/pages/name_entry/page.dart' as _i3;
+import 'package:secretsanta/presentation/pages/remote_draw/page.dart' as _i4;
 
 /// generated route for
 /// [_i1.DrawPage]
-class DrawRoute extends _i4.PageRouteInfo<DrawRouteArgs> {
+class DrawRoute extends _i5.PageRouteInfo<DrawRouteArgs> {
   DrawRoute({
-    _i5.Key? key,
+    _i6.Key? key,
     required int index,
-    required _i6.BuiltList<String> names,
-    required _i6.BuiltList<int> drawNames,
-    List<_i4.PageRouteInfo>? children,
+    required _i7.BuiltList<String> names,
+    required _i7.BuiltList<int> drawNames,
+    List<_i5.PageRouteInfo>? children,
   }) : super(
           DrawRoute.name,
           args: DrawRouteArgs(
@@ -37,7 +38,7 @@ class DrawRoute extends _i4.PageRouteInfo<DrawRouteArgs> {
 
   static const String name = 'DrawRoute';
 
-  static _i4.PageInfo page = _i4.PageInfo(
+  static _i5.PageInfo page = _i5.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<DrawRouteArgs>();
@@ -59,13 +60,13 @@ class DrawRouteArgs {
     required this.drawNames,
   });
 
-  final _i5.Key? key;
+  final _i6.Key? key;
 
   final int index;
 
-  final _i6.BuiltList<String> names;
+  final _i7.BuiltList<String> names;
 
-  final _i6.BuiltList<int> drawNames;
+  final _i7.BuiltList<int> drawNames;
 
   @override
   String toString() {
@@ -75,8 +76,8 @@ class DrawRouteArgs {
 
 /// generated route for
 /// [_i2.EndPage]
-class EndRoute extends _i4.PageRouteInfo<void> {
-  const EndRoute({List<_i4.PageRouteInfo>? children})
+class EndRoute extends _i5.PageRouteInfo<void> {
+  const EndRoute({List<_i5.PageRouteInfo>? children})
       : super(
           EndRoute.name,
           initialChildren: children,
@@ -84,7 +85,7 @@ class EndRoute extends _i4.PageRouteInfo<void> {
 
   static const String name = 'EndRoute';
 
-  static _i4.PageInfo page = _i4.PageInfo(
+  static _i5.PageInfo page = _i5.PageInfo(
     name,
     builder: (data) {
       return const _i2.EndPage();
@@ -94,8 +95,8 @@ class EndRoute extends _i4.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i3.NameEntryPage]
-class NameEntryRoute extends _i4.PageRouteInfo<void> {
-  const NameEntryRoute({List<_i4.PageRouteInfo>? children})
+class NameEntryRoute extends _i5.PageRouteInfo<void> {
+  const NameEntryRoute({List<_i5.PageRouteInfo>? children})
       : super(
           NameEntryRoute.name,
           initialChildren: children,
@@ -103,10 +104,62 @@ class NameEntryRoute extends _i4.PageRouteInfo<void> {
 
   static const String name = 'NameEntryRoute';
 
-  static _i4.PageInfo page = _i4.PageInfo(
+  static _i5.PageInfo page = _i5.PageInfo(
     name,
     builder: (data) {
       return const _i3.NameEntryPage();
     },
   );
+}
+
+/// generated route for
+/// [_i4.RemoteDrawPage]
+class RemoteDrawRoute extends _i5.PageRouteInfo<RemoteDrawRouteArgs> {
+  RemoteDrawRoute({
+    _i6.Key? key,
+    required _i7.BuiltList<String> names,
+    required _i7.BuiltList<String> emails,
+    List<_i5.PageRouteInfo>? children,
+  }) : super(
+          RemoteDrawRoute.name,
+          args: RemoteDrawRouteArgs(
+            key: key,
+            names: names,
+            emails: emails,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'RemoteDrawRoute';
+
+  static _i5.PageInfo page = _i5.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<RemoteDrawRouteArgs>();
+      return _i4.RemoteDrawPage(
+        key: args.key,
+        names: args.names,
+        emails: args.emails,
+      );
+    },
+  );
+}
+
+class RemoteDrawRouteArgs {
+  const RemoteDrawRouteArgs({
+    this.key,
+    required this.names,
+    required this.emails,
+  });
+
+  final _i6.Key? key;
+
+  final _i7.BuiltList<String> names;
+
+  final _i7.BuiltList<String> emails;
+
+  @override
+  String toString() {
+    return 'RemoteDrawRouteArgs{key: $key, names: $names, emails: $emails}';
+  }
 }

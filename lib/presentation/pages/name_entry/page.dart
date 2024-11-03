@@ -5,6 +5,7 @@ import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:secretsanta/presentation/pages/name_entry/app_bar_sliver.dart';
 import 'package:secretsanta/presentation/routes/auto_router.gr.dart';
 import 'package:secretsanta/presentation/widgets/basic_made_by.dart';
 
@@ -20,15 +21,33 @@ class NameEntryPage extends HookWidget {
   ];
   const NameEntryPage({Key? key}) : super(key: key);
 
+  static bool haveEnoughNamesAndEmails(
+      bool isRemote, BuiltList<String> names, BuiltList<String> emails) {
+    final namesOk =
+        names.map((name) => name.trim()).where((name) => name != "").length > 2;
+
+    if (!isRemote || !namesOk) {
+      return namesOk;
+    }
+
+    // There's a bug here where the emails entered don't need to match the rows with the names.
+    final emailsOk = emails
+            .map((email) => email.trim())
+            .where((email) => email != "")
+            .length ==
+        names.length;
+
+    return emailsOk;
+  }
+
   @override
   Widget build(BuildContext context) {
     final scroller = useScrollController();
+    final isRemote = useState(false);
     final names = useState(BuiltList<String>(["", "", "", "", ""]));
-    final canProgress = names.value
-            .map((name) => name.trim())
-            .where((name) => name != "")
-            .length >
-        2;
+    final emails = useState(BuiltList<String>(["", "", "", "", ""]));
+    final canProgress =
+        haveEnoughNamesAndEmails(isRemote.value, names.value, names.value);
     final latestInputNode = useFocusNode(debugLabel: "latest_input_node");
     return Scaffold(
       backgroundColor: Colors.grey[200],
@@ -46,13 +65,23 @@ class NameEntryPage extends HookWidget {
                     .map((name) => name.trim())
                     .where((name) => name != "")
                     .toBuiltList();
-                AutoRouter.of(context).push(
-                  DrawRoute(
-                    index: 0,
-                    names: n,
-                    drawNames: generateSecretSantas(n),
-                  ),
-                );
+                if (!isRemote.value) {
+                  AutoRouter.of(context).push(
+                    DrawRoute(
+                      index: 0,
+                      names: n,
+                      drawNames: generateSecretSantas(n),
+                    ),
+                  );
+                } else {
+                  final e = emails.value
+                      .map((email) => email.trim())
+                      .where((email) => email != "")
+                      .toBuiltList();
+                  AutoRouter.of(context).push(
+                    RemoteDrawRoute(names: n, emails: e),
+                  );
+                }
               }
             : null,
         icon: const Icon(Icons.chevron_right_rounded),
@@ -61,20 +90,7 @@ class NameEntryPage extends HookWidget {
       body: CustomScrollView(
         controller: scroller,
         slivers: [
-          SliverAppBar(
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                "Secret Santa",
-                style: GoogleFonts.mountainsOfChristmas(),
-              ),
-              background: Image.asset(
-                "assets/images/bg.jpg",
-                fit: BoxFit.cover,
-              ),
-            ),
-            collapsedHeight: 64,
-            expandedHeight: 400,
-          ),
+          const AppBarSliver(),
           SliverPadding(
             padding: const EdgeInsets.all(8),
             sliver: SliverToBoxAdapter(
@@ -87,6 +103,32 @@ class NameEntryPage extends HookWidget {
                     subtitle: Text("Empty names will be ignored."),
                   ),
                 ),
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.all(8),
+            sliver: SliverToBoxAdapter(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Draw all names on this device",
+                    style: TextStyle(
+                      color: isRemote.value ? Colors.grey : null,
+                    ),
+                  ),
+                  Switch(
+                    value: isRemote.value,
+                    onChanged: (v) => isRemote.value = v,
+                  ),
+                  Text(
+                    "Send emails with draw results",
+                    style: TextStyle(
+                      color: isRemote.value ? null : Colors.grey,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
