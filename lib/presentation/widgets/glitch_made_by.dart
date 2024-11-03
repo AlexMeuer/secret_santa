@@ -37,7 +37,7 @@ class GlitchMadeBy extends StatelessWidget {
                 child: MouseRegion(
                   cursor: SystemMouseCursors.click,
                   child: GestureDetector(
-                    onTap: () => launch("https://alexmeuer.com"),
+                    onTap: () => launchUrl(Uri.https('alexmeuer.com')),
                     child: const AutoSizeText(
                       "Alex Meuer",
                       style: TextStyle(
@@ -70,7 +70,7 @@ class GlitchMadeBy extends StatelessWidget {
                 child: MouseRegion(
                   cursor: SystemMouseCursors.click,
                   child: GestureDetector(
-                    onTap: () => launch("https://flutter.dev"),
+                    onTap: () => launchUrl(Uri.https("flutter.dev")),
                     child: const AutoSizeText(
                       "Flutter",
                       textAlign: TextAlign.end,

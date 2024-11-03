@@ -23,14 +23,14 @@ class BasicMadeBy extends StatelessWidget {
                 text: "Alex Meuer",
                 style: const TextStyle(color: Colors.lightBlue),
                 recognizer: TapGestureRecognizer()
-                  ..onTap = () => launch("https://alexmeuer.com"),
+                  ..onTap = () => launchUrl(Uri.https("alexmeuer.com")),
               ),
               const TextSpan(text: " with "),
               TextSpan(
                 text: "Flutter",
                 style: const TextStyle(color: Colors.lightBlue),
                 recognizer: TapGestureRecognizer()
-                  ..onTap = () => launch("https://flutter.dev/"),
+                  ..onTap = () => launchUrl(Uri.https("flutter.dev")),
               ),
             ],
           ),
