@@ -22,9 +22,13 @@ class NameEntryPage extends HookWidget {
   const NameEntryPage({Key? key}) : super(key: key);
 
   static bool haveEnoughNamesAndEmails(
-      bool isRemote, BuiltList<String> names, BuiltList<String> emails) {
-    final namesOk =
-        names.map((name) => name.trim()).where((name) => name != "").length > 2;
+    bool isRemote,
+    BuiltList<String> names,
+    BuiltList<String> emails,
+  ) {
+    final nonEmptyNames =
+        names.map((name) => name.trim()).where((name) => name != "");
+    final namesOk = nonEmptyNames.length > 2;
 
     if (!isRemote || !namesOk) {
       return namesOk;
@@ -35,7 +39,7 @@ class NameEntryPage extends HookWidget {
             .map((email) => email.trim())
             .where((email) => email != "")
             .length ==
-        names.length;
+        nonEmptyNames.length;
 
     return emailsOk;
   }
@@ -47,7 +51,7 @@ class NameEntryPage extends HookWidget {
     final names = useState(BuiltList<String>(["", "", "", "", ""]));
     final emails = useState(BuiltList<String>(["", "", "", "", ""]));
     final canProgress =
-        haveEnoughNamesAndEmails(isRemote.value, names.value, names.value);
+        haveEnoughNamesAndEmails(isRemote.value, names.value, emails.value);
     final latestInputNode = useFocusNode(debugLabel: "latest_input_node");
     return Scaffold(
       backgroundColor: Colors.grey[200],
@@ -87,112 +91,145 @@ class NameEntryPage extends HookWidget {
         icon: const Icon(Icons.chevron_right_rounded),
         label: const Text("START DRAW"),
       ),
-      body: CustomScrollView(
-        controller: scroller,
-        slivers: [
-          const AppBarSliver(),
-          SliverPadding(
-            padding: const EdgeInsets.all(8),
-            sliver: SliverToBoxAdapter(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 720),
-                  child: const ListTile(
-                    leading: FaIcon(FontAwesomeIcons.info),
-                    title: Text("Enter names for secret santa."),
-                    subtitle: Text("Empty names will be ignored."),
+      body: Form(
+        autovalidateMode: AutovalidateMode.always,
+        child: CustomScrollView(
+          controller: scroller,
+          slivers: [
+            const AppBarSliver(),
+            SliverPadding(
+              padding: const EdgeInsets.all(8),
+              sliver: SliverToBoxAdapter(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 720),
+                    child: const ListTile(
+                      leading: FaIcon(FontAwesomeIcons.info),
+                      title: Text("Enter names for secret santa."),
+                      subtitle: Text("Empty names will be ignored."),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.all(8),
-            sliver: SliverToBoxAdapter(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Draw all names on this device",
-                    style: TextStyle(
-                      color: isRemote.value ? Colors.grey : null,
+            SliverPadding(
+              padding: const EdgeInsets.all(8),
+              sliver: SliverToBoxAdapter(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Draw all names on this device",
+                      style: TextStyle(
+                        color: isRemote.value ? Colors.grey : null,
+                      ),
                     ),
-                  ),
-                  Switch(
-                    value: isRemote.value,
-                    onChanged: (v) => isRemote.value = v,
-                  ),
-                  Text(
-                    "Send emails with draw results",
-                    style: TextStyle(
-                      color: isRemote.value ? null : Colors.grey,
+                    Switch(
+                      value: isRemote.value,
+                      onChanged: (v) => isRemote.value = v,
                     ),
-                  ),
-                ],
+                    Text(
+                      "Send emails with draw results",
+                      style: TextStyle(
+                        color: isRemote.value ? null : Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, i) => Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 720),
-                  child: FadeInUp(
-                    child: ListTile(
-                      leading: FaIcon(icons[i % icons.length]),
-                      title: TextField(
-                        focusNode: i == names.value.length - 1
-                            ? latestInputNode
-                            : null,
-                        autocorrect: false,
-                        keyboardType: TextInputType.name,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, i) => Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 720),
+                    child: FadeInUp(
+                      child: ListTile(
+                        leading: FaIcon(icons[i % icons.length]),
+                        title: Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                focusNode: i == names.value.length - 1
+                                    ? latestInputNode
+                                    : null,
+                                autocorrect: false,
+                                keyboardType: TextInputType.name,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: "Name",
+                                ),
+                                textInputAction: TextInputAction.next,
+                                onChanged: (v) {
+                                  names.value = names.value.rebuild(
+                                    (b) => b
+                                      ..removeAt(i)
+                                      ..insert(i, v),
+                                  );
+                                },
+                              ),
+                            ),
+                            if (isRemote.value)
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: TextFormField(
+                                    autocorrect: false,
+                                    keyboardType: TextInputType.emailAddress,
+                                    validator: validateEmail,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: "Email",
+                                    ),
+                                    onChanged: (v) {
+                                      emails.value = emails.value.rebuild(
+                                        (b) => b
+                                          ..removeAt(i)
+                                          ..insert(i, v),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
-                        textInputAction: TextInputAction.next,
-                        onChanged: (v) {
-                          names.value = names.value.rebuild(
-                            (b) => b
-                              ..removeAt(i)
-                              ..insert(i, v),
-                          );
-                        },
                       ),
                     ),
                   ),
                 ),
-              ),
-              childCount: names.value.length,
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.all(8),
-            sliver: SliverToBoxAdapter(
-              child: IconButton(
-                onPressed: () async {
-                  FocusScope.of(context).unfocus();
-                  names.value = names.value.rebuild((b) => b..add(""));
-                  await Future.delayed(const Duration(milliseconds: 8));
-                  latestInputNode.requestFocus();
-                  await Future.delayed(const Duration(milliseconds: 8));
-                  scroller.animateTo(
-                    scroller.position.maxScrollExtent,
-                    duration: const Duration(milliseconds: 600),
-                    curve: Curves.easeOutQuint,
-                  );
-                },
-                icon: const Icon(Icons.add),
+                childCount: names.value.length,
               ),
             ),
-          ),
-          const SliverFillRemaining(
-            hasScrollBody: false,
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: BasicMadeBy(),
+            SliverPadding(
+              padding: const EdgeInsets.all(8),
+              sliver: SliverToBoxAdapter(
+                child: IconButton(
+                  onPressed: () async {
+                    FocusScope.of(context).unfocus();
+                    names.value = names.value.rebuild((b) => b..add(""));
+                    emails.value = emails.value.rebuild((b) => b..add(""));
+                    await Future.delayed(const Duration(milliseconds: 8));
+                    latestInputNode.requestFocus();
+                    await Future.delayed(const Duration(milliseconds: 8));
+                    scroller.animateTo(
+                      scroller.position.maxScrollExtent,
+                      duration: const Duration(milliseconds: 600),
+                      curve: Curves.easeOutQuint,
+                    );
+                  },
+                  icon: const Icon(Icons.add),
+                ),
+              ),
             ),
-          ),
-        ],
+            const SliverFillRemaining(
+              hasScrollBody: false,
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: BasicMadeBy(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -213,4 +250,19 @@ class NameEntryPage extends HookWidget {
     } while (hasSelfDraw());
     return list.build();
   }
+}
+
+String? validateEmail(String? value) {
+  const pattern = r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
+      r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
+      r'\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*'
+      r'[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4]'
+      r'[0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9]'
+      r'[0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\'
+      r'x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])';
+  final regex = RegExp(pattern);
+
+  return value!.isNotEmpty && !regex.hasMatch(value)
+      ? 'Enter a valid email address'
+      : null;
 }
