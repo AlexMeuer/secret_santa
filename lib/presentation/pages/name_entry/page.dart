@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:secretsanta/presentation/routes/auto_router.gr.dart';
 import 'package:secretsanta/presentation/widgets/basic_made_by.dart';
 
+@RoutePage()
 class NameEntryPage extends HookWidget {
   static const icons = [
     FontAwesomeIcons.gifts,
@@ -47,7 +47,7 @@ class NameEntryPage extends HookWidget {
                     .where((name) => name != "")
                     .toBuiltList();
                 AutoRouter.of(context).push(
-                  DrawPageRoute(
+                  DrawRoute(
                     index: 0,
                     names: n,
                     drawNames: generateSecretSantas(n),

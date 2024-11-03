@@ -8,6 +8,7 @@ import 'package:lottie/lottie.dart';
 import 'package:secretsanta/presentation/routes/auto_router.gr.dart';
 import 'package:secretsanta/presentation/widgets/bg_image.dart';
 
+@RoutePage()
 class DrawPage extends HookWidget {
   DrawPage({
     Key? key,
@@ -42,9 +43,9 @@ class DrawPage extends HookWidget {
           tooltip: show.value ? null : "Reveal before continuing.",
           onPressed: show.value
               ? () => index + 1 >= names.length
-                  ? AutoRouter.of(context).push(const EndPageRoute())
+                  ? AutoRouter.of(context).push(const EndRoute())
                   : AutoRouter.of(context).push(
-                      DrawPageRoute(
+                      DrawRoute(
                         index: index + 1,
                         names: names,
                         drawNames: drawNames,
@@ -67,7 +68,7 @@ class DrawPage extends HookWidget {
                     constraints: const BoxConstraints(maxWidth: 420),
                     child: AutoSizeText(
                       names[index],
-                      style: theme.textTheme.headline1
+                      style: theme.textTheme.headlineLarge
                           ?.copyWith(color: Colors.white),
                       maxLines: 1,
                       textAlign: TextAlign.center,
@@ -96,7 +97,7 @@ class DrawPage extends HookWidget {
                         constraints: const BoxConstraints(minWidth: 200),
                         child: AutoSizeText(
                           show.value ? names[drawNames[index]] : "DRAW",
-                          style: theme.textTheme.headline2
+                          style: theme.textTheme.headlineMedium
                               ?.copyWith(color: Colors.white),
                           maxLines: 1,
                           textAlign: TextAlign.center,

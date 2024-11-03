@@ -27,7 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  auto_route: ^2.4.2
+  auto_route: ^9.2.2
   auto_size_text: ^3.0.0-nullsafety.0
   built_collection: ^5.1.1
   flutter:
@@ -35,7 +35,7 @@ dependencies:
   flutter_animator: ^3.2.0
   flutter_hooks: ^0.18.0
   font_awesome_flutter: ^9.1.0
-  google_fonts: ^2.1.0
+  google_fonts: ^6.2.1
   lottie: ^1.2.1
   url_launcher: ^6.0.12
 

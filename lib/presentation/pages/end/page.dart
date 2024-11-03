@@ -9,6 +9,7 @@ import 'package:lottie/lottie.dart';
 import 'package:secretsanta/presentation/widgets/bg_image.dart';
 import 'package:secretsanta/presentation/widgets/glitch_made_by.dart';
 
+@RoutePage()
 class EndPage extends HookWidget {
   const EndPage({Key? key}) : super(key: key);
 
@@ -31,7 +32,7 @@ class EndPage extends HookWidget {
                   child: AutoSizeText(
                     "That's all folks!",
                     maxLines: 1,
-                    style: Theme.of(context).textTheme.headline1,
+                    style: Theme.of(context).textTheme.headlineLarge,
                     textAlign: TextAlign.center,
                   ),
                 ),

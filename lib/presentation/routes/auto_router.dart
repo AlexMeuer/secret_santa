@@ -1,13 +1,12 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:secretsanta/presentation/pages/draw/page.dart';
-import 'package:secretsanta/presentation/pages/end/page.dart';
-import 'package:secretsanta/presentation/pages/name_entry/page.dart';
+import 'package:secretsanta/presentation/routes/auto_router.gr.dart';
 
-@MaterialAutoRouter(
-  routes: <AutoRoute>[
-    AutoRoute(page: NameEntryPage, initial: true),
-    AutoRoute(page: DrawPage),
-    AutoRoute(page: EndPage),
-  ],
-)
-class $AppRouter {}
+@AutoRouterConfig(replaceInRouteName: 'Screen|Page,Route')
+class AppRouter extends RootStackRouter {
+  @override
+  List<AutoRoute> get routes => [
+        AutoRoute(page: NameEntryRoute.page, initial: true),
+        AutoRoute(page: DrawRoute.page),
+        AutoRoute(page: EndRoute.page),
+      ];
+}
