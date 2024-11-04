@@ -4,9 +4,16 @@
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "cloud-functions/**"
     ],
     "rewrites": [
+      {
+        "source": "/doSecretSantaDraw",
+        "function": {
+          "functionId": "doSecretSantaDraw"
+        }
+      },
       {
         "source": "**",
         "destination": "/index.html"

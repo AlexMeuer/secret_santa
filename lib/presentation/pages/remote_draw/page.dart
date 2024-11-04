@@ -72,7 +72,7 @@ Future<void> sendPostRequest(
   BuiltList<String> emails,
 ) async {
   final response = await http.post(
-    Uri.https("dosecretsantadraw-pncwusou7q-uc.a.run.app"),
+    Uri.parse("/doSecretSantaDraw"),
     headers: {
       'Content-Type': 'application/json',
     },

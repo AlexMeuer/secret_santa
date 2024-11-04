@@ -22,11 +22,11 @@ import { z } from "zod";
 //   response.send("Hello from Firebase!");
 // });
 
-const DOMAIN = defineString("DOMAIN");
 const AUTHOR_NAME = defineString("AUTHOR_NAME");
 const AUTHOR_WEBSITE = defineString("AUTHOR_WEBSITE");
 const MAILGUN_API_KEY = defineSecret("MAILGUN_API_KEY");
 const MAILGUN_URL = defineString("MAILGUN_URL");
+const MAILGUN_DOMAIN = defineString("MAILGUN_DOMAIN");
 const MAILGUN_TEMPLATE = defineString("MAILGUN_TEMPLATE");
 const MAIL_FROM = defineString("MAIL_FROM");
 
@@ -42,7 +42,6 @@ const Payload = z.object({
 type Payload = z.infer<typeof Payload>;
 
 export const doSecretSantaDraw = onRequest(
-	{ cors: DOMAIN.value() },
 	// { cors: true }, // Allows all CORS requests, do not use in production.
 	async (request, response) => {
 		if (request.method !== "POST") {
@@ -90,7 +89,7 @@ export const doSecretSantaDraw = onRequest(
 		const errors: string[] = [];
 		for (let index = 0; index < participants.length; index++) {
 			try {
-				const result = await mg.messages.create(DOMAIN.value(), {
+				const result = await mg.messages.create(MAILGUN_DOMAIN.value(), {
 					from: `Santa <${MAIL_FROM.value()}>`,
 					to: [participants[index].email],
 					subject: "Secret Santa Draw",
