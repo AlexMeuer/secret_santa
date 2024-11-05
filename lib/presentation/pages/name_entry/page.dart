@@ -118,20 +118,25 @@ class NameEntryPage extends HookWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "Draw all names on this device",
-                      style: TextStyle(
-                        color: isRemote.value ? Colors.grey : null,
+                    Flexible(
+                      child: Text(
+                        "Draw all names on this device",
+                        style: TextStyle(
+                          color: isRemote.value ? Colors.grey : null,
+                        ),
+                        textAlign: TextAlign.end,
                       ),
                     ),
                     Switch(
                       value: isRemote.value,
                       onChanged: (v) => isRemote.value = v,
                     ),
-                    Text(
-                      "Send emails with draw results",
-                      style: TextStyle(
-                        color: isRemote.value ? null : Colors.grey,
+                    Flexible(
+                      child: Text(
+                        "Send emails with draw results",
+                        style: TextStyle(
+                          color: isRemote.value ? null : Colors.grey,
+                        ),
                       ),
                     ),
                   ],
